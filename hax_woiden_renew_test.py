@@ -33,7 +33,7 @@ if __name__ == '__main__':
 	# # 腾讯云api配置信息
 	# tencent_SecretId = 'xxx'
 	# tencent_SecretKey = 'xxx'
-	# wit.ai语音识别
+	# wit.ai语音识别的Server Access Token
 	# wit_access_token = 'xxx'
 	#
 	#
@@ -115,7 +115,7 @@ if __name__ == '__main__':
 		# 腾讯云api配置信息
 		'tencent_SecretId': 'xxx',
 		'tencent_SecretKey': 'xxx',
-		# wit.ai语音识别
+		# wit.ai语音识别的Server Access Token
 		'wit_access_token': 'xxx',
 	}
 	renewRetryTimes = 0 # 续期失败重试次数

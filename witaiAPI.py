@@ -11,7 +11,7 @@ def read_audio(file):
 	return audio
 
 
-def witAudioToText(audioContent, wit_access_token=""):
+def witAudioToText(audioContent, wit_access_token=""): # Server Access Token
 	print("--------witAudioToText--------")
 	# 官方文档地址：https://wit.ai/docs/http/20230215/#post__speech_link
 	# Wit speech API endpoint
@@ -20,6 +20,11 @@ def witAudioToText(audioContent, wit_access_token=""):
 	# Wit.ai api access token
 	# buster插件的TOKEN，偷来试用
 	# wit_access_token = wit_access_token or  'xxxxxx'
+	# 使用这个TOKEN有可能遇到使用频率限制
+	# {
+	#   "code": "rate-limit",
+	#   "error": "You have exceeded the limit of 60 requests per minute for your app"
+	# }
 
 	headers = {
 		'authorization': 'Bearer ' + wit_access_token,

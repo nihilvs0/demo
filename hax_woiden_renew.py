@@ -21,9 +21,9 @@ pip install cryptography==35.0.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 
 # 使用seleniumwire可以获取所有请求的url、method、headers、response等信息
-# from seleniumwire import webdriver
-import re
 
+import re
+# from seleniumwire import webdriver
 from selenium import webdriver
 # import pyautogui
 import time
@@ -33,6 +33,11 @@ import random
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait as wait
+
+import ssl
+# 关闭证书验证，这个好像可以用于seleniumwire
+# 参考：https://github.com/adm1nSQL/hax_renew/blob/main/main.py#L17
+ssl._create_default_https_context = ssl._create_unverified_context
 
 
 import socks
@@ -154,7 +159,7 @@ class haxRenewClass:
 		# 腾讯云api配置信息
 		self.tencent_SecretId = tencent_SecretId
 		self.tencent_SecretKey = tencent_SecretKey
-		# wit.ai语音识别
+		# wit.ai语音识的Server Access Token
 		self.wit_access_token = wit_access_token
 		# Renew失败重试次数
 		self.renewRetryTimes = 0
@@ -514,6 +519,8 @@ class haxRenewClass:
 			time.sleep(3)
 			# 重新加载页面会丢失已输入的信息，注意必须关闭广告后再输入
 			browser.get(browser.current_url.strip('#google_vignette'))
+			# 或者参考：https://github.com/Zakkoree/woiden_extend/blob/main/main.py#L174
+			# browser.execute_script("$('ins.adsbygoogle')?.css('display','none');")
 			return True
 
 	def reCaptcha_V2(self, browser):
@@ -598,9 +605,13 @@ class haxRenewClass:
 		# url = ''
 		# 根据url获取语音识别结果
 		print('开始进行语音识别')
+		# Result = ''
 		if self.wit_access_token:
 			print('使用wit.ai进行语音识别')
 			Result = myWitAudioToText(url=url, wit_access_token=self.wit_access_token)
+			if not Result and self.tencent_SecretId and self.tencent_SecretKey:
+				print('wit.ai识别失败，可能遇到了频率限制。切换到腾讯语音识别')
+				Result = myTencentAsr(SecretId=self.tencent_SecretId, SecretKey=self.tencent_SecretKey, url=url)
 		else:
 			print('使用腾讯语音识别')
 			Result = myTencentAsr(SecretId=self.tencent_SecretId, SecretKey=self.tencent_SecretKey, url=url)
@@ -1036,7 +1047,7 @@ if __name__ == '__main__':
 	# # 腾讯云api配置信息
 	# tencent_SecretId = 'xxx'
 	# tencent_SecretKey = 'xxx'
-	# wit.ai语音识别
+	# wit.ai语音识别的Server Access Token
 	# wit_access_token = 'xxx'
 	#
 	#
@@ -1118,7 +1129,7 @@ if __name__ == '__main__':
 		# 腾讯云api配置信息
 		'tencent_SecretId': 'xxx',
 		'tencent_SecretKey': 'xxx',
-		# wit.ai语音识别
+		# wit.ai语音识别的Server Access Token
 		'wit_access_token': 'xxx',
 	}
 	renewRetryTimes = 0 # 续期失败重试次数
